@@ -1,5 +1,6 @@
 package dota2
 
+// MatchDetail matches the data returned about an individual match
 type MatchDetail struct {
 	Players               []PlayerDetail `json:"players"`
 	RadiantWin            bool           `json:"radiant_win"`
@@ -22,6 +23,8 @@ type MatchDetail struct {
 	Engine                int            `json:"engine"`
 }
 
+// PlayerDetail matches the player info returned as part of a single
+// match detail request
 type PlayerDetail struct {
 	AccountID    int `json:"account_id"`
 	PlayerSlot   int `json:"player_slot"`
@@ -48,6 +51,7 @@ type PlayerDetail struct {
 	Level        int `json:"level"`
 }
 
+// Matches is the response to the match history request
 type Matches struct {
 	Status           int     `json:"status"`
 	NumResults       int     `json:"num_results"`
@@ -56,6 +60,7 @@ type Matches struct {
 	Matches          []Match `json:"matches"`
 }
 
+// Match is the short match detail returned in a match history list
 type Match struct {
 	MatchID       int      `json:"match_id"`
 	MatchSeqNum   int      `json:"match_seq_num"`
@@ -66,12 +71,14 @@ type Match struct {
 	Players       []Player `json:"players"`
 }
 
+// Player is the short detail returned with each match in a match history list
 type Player struct {
 	AccountID  int `json:"account_id"`
 	PlayerSlot int `json:"player_slot"`
 	HeroID     int `json:"hero_id"`
 }
 
+// Api must be implemented to interact with the Dota 2 API
 type Api interface {
 	MatchDetail(id int) (MatchDetail, error)
 	Matches(from int) (Matches, error)

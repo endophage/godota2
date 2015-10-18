@@ -22,7 +22,7 @@ var (
 	matchDetailURL  = baseURL + "/GetMatchDetails/V001/"
 )
 
-type Result struct {
+type result struct {
 	Result json.RawMessage `json:"result"`
 }
 
@@ -30,12 +30,16 @@ type dota2Api struct {
 	key string
 }
 
+// NewDota2Api creates a new instance of the dota2API struct
 func NewDota2Api(key string) dota2Api {
 	return dota2Api{
 		key: key,
 	}
 }
 
+// Matches returns a list of matches. If you wish to start listing from
+// a particular match, pass from as the match ID you want to start at.
+// The from parameter is inclusive.
 func (d dota2Api) Matches(from int) (*dota2.Matches, error) {
 	u, err := url.Parse(matchHistoryURL)
 	if err != nil {
@@ -54,7 +58,7 @@ func (d dota2Api) Matches(from int) (*dota2.Matches, error) {
 	}
 	defer r.Body.Close()
 
-	w := &Result{}
+	w := &result{}
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
@@ -71,6 +75,8 @@ func (d dota2Api) Matches(from int) (*dota2.Matches, error) {
 	return matches, nil
 }
 
+// MatchDetail returns the verbose details about a specific match,
+// identified by the matchID parameter
 func (d dota2Api) MatchDetail(matchID int) (*dota2.MatchDetail, error) {
 	u, err := url.Parse(matchDetailURL)
 	if err != nil {
@@ -86,7 +92,7 @@ func (d dota2Api) MatchDetail(matchID int) (*dota2.MatchDetail, error) {
 	}
 	defer r.Body.Close()
 
-	w := &Result{}
+	w := &result{}
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
